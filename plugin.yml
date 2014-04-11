@@ -1,0 +1,9 @@
+name: TSG_Weight
+version: 1
+main: WeightPlugin.WeightPlugin
+commands:
+   Set:
+      description: This is a demo command.
+      usage: /<Set> [item] [number]
+      permission: <TSG_Weight>.Set
+      permission-message: You don't have <permission>
