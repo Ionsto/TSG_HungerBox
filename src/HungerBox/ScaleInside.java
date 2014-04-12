@@ -1,20 +1,26 @@
+package HungerBox;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
  
 public class ScaleInside extends BukkitRunnable {
+	JavaPlugin plugin;
+	public ScaleInside(JavaPlugin plugin)
+	{
+		this.plugin = plugin;
+	}
     @Override
     public void run() {
         // What you want to schedule goes here
-        HungerBox.SizeX -= Decay;
-        HungerBox.SizeY -= Decay;
-		if(HungerBox.SizeX < Min)
+        HungerBox.SizeX -= HungerBox.Decay;
+        HungerBox.SizeZ -= HungerBox.Decay;
+		if(HungerBox.SizeX < HungerBox.MinX)
 		{
-			HungerBox.SizeX = Min;
+			HungerBox.SizeX = HungerBox.MinX;
 		}
-		if(HungerBox.SizeY < Min)
+		if(HungerBox.SizeZ < HungerBox.MinZ)
 		{
-			HungerBox.SizeY = Min;
+			HungerBox.SizeZ = HungerBox.MinZ;
 		}
-		//plugin.getServer().broadcastMessage("Welcome to Bukkit! Remember to read the documentation!");
+		plugin.getServer().broadcastMessage("Box Shrink Size:" + String.valueOf(HungerBox.SizeX) + ":" + String.valueOf(HungerBox.SizeZ));
     }
 }

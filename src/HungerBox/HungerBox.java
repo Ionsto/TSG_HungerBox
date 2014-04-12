@@ -1,4 +1,4 @@
-package WeightPlugin;
+package HungerBox;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -25,14 +25,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 import org.yaml.snakeyaml.Yaml;
 
-public class WeightPlugin extends JavaPlugin implements Listener{
-	public static float SizeX = 100,SizeY = 100;//The starting size from the scenter
+public class HungerBox extends JavaPlugin implements Listener{
+	public static float SizeX = 100,SizeZ = 100;//The starting size from the scenter
 	float DecayTicks = 50;//How often the scheduled event happens
 	public static float Decay = 1;//How much the hunger box shrinks by each scheduled event
-	public static float Min = 10;//The minimum the non hunger box can shrink to
-    @Override
+	public static float MinX = 10;//The minimum the non hunger box can shrink to
+	public static float MinZ = 10;//The minimum the non hunger box can shrink to
+    public boolean Start = false;
+	@Override
     public void onEnable() {
     	this.getServer().getPluginManager().registerEvents(this, this);
     }
@@ -50,11 +55,25 @@ public class WeightPlugin extends JavaPlugin implements Listener{
     }
     @EventHandler
     public void OnPlayerMove(PlayerMoveEvent evt) {
-        Player player = evt.getPlayer(); // The player who joined
-		//Check if inside box
-		float DiffX = 0;
-		float DiffY = 0;
-		float Hungereffect = 5 * ((DiffX*DiffX)+(DiffY * DiffY));
+    	if(Start)
+    	{
+	        Player player = evt.getPlayer(); // The player who joined
+			//Check if inside box
+	        if(Math.abs(player.getLocation().getX()) > SizeX || Math.abs(player.getLocation().getZ()) > SizeZ)
+	        {
+	        	float DiffX = (float) Math.max(Math.abs(player.getLocation().getX()) - SizeX,0);
+	        	float DiffZ = (float) Math.max(Math.abs(player.getLocation().getZ()) - SizeZ,0);
+				float Hungereffect = 1 * ((DiffX*DiffX)+(DiffZ * DiffZ));
+				player.removePotionEffect(PotionEffectType.HUNGER);
+				player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 9999, (int) Hungereffect));
+	    		getServer().broadcastMessage("Set" + String.valueOf(Hungereffect));
+	        }
+	    	else
+	    	{
+	    		getServer().broadcastMessage("Set 0");
+				player.removePotionEffect(PotionEffectType.HUNGER);
+	    	}
+    	}
     }
     
     @Override
@@ -66,7 +85,7 @@ public class WeightPlugin extends JavaPlugin implements Listener{
 			{
 				if (cmd.getName().equalsIgnoreCase("HungerDecayTick")) 
 				{
-	    			DecayTick = Float.parseFloat(args[0]);
+					DecayTicks = Float.parseFloat(args[0]);
 	    	    	return true;
 				}
 				if (cmd.getName().equalsIgnoreCase("HungerDecay")) 
@@ -80,11 +99,24 @@ public class WeightPlugin extends JavaPlugin implements Listener{
 		{
 			if(args[0].matches("-?\\d+") && args[1].matches("-?\\d+") )//Regex for checking if string is number
 			{
+				if (cmd.getName().equalsIgnoreCase("HungerStartSize")) 
+				{
+	    			SizeX = Float.parseFloat(args[0]);
+	    			SizeZ = Float.parseFloat(args[1]);
+	    	    	return true;
+	    		}
+				if (cmd.getName().equalsIgnoreCase("HungerEndSize")) 
+				{
+	    			SizeX = Float.parseFloat(args[0]);
+	    			SizeZ = Float.parseFloat(args[1]);
+	    	    	return true;
+	    		}
 			}
 		}
 		if (cmd.getName().equalsIgnoreCase("HungerStart")) 
 		{
-			BukkitTask task = new ScaleInside(this.plugin).runTaskLater(this.plugin, DecayTick);
+			Start = true;
+			BukkitTask task = new ScaleInside(this).runTaskTimer(this, 0, (long) DecayTicks);
 			return true;
 		}
     	return false;

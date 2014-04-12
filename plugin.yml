@@ -1,9 +1,19 @@
-name: TSG_Weight
+name: TSG_Hunger
 version: 1
-main: WeightPlugin.WeightPlugin
+main: HungerBox.HungerBox
 commands:
-   Set:
-      description: This is a demo command.
-      usage: /<Set> [item] [number]
-      permission: <TSG_Weight>.Set
+   HungerStart:
+      description: This starts the game
+      usage: /<HungerStart>
+      permission: <TSG_Hunger>.HungerStart
+      permission-message: You don't have <permission>
+   HungerStartSize:
+      description: This sets the start game size
+      usage: /<HungerStartSize> <X size> <Z size>
+      permission: <TSG_Hunger>.HungerStartSize
+      permission-message: You don't have <permission>
+   HungerEndSize:
+      description: This sets the end game size
+      usage: /<HungerEndSize> <X size> <Z size>
+      permission: <TSG_Hunger>.HungerEndSize
       permission-message: You don't have <permission>
