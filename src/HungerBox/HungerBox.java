@@ -37,6 +37,7 @@ public class HungerBox extends JavaPlugin implements Listener{
 	public static float MinX = 10;//The minimum the non hunger box can shrink to
 	public static float MinZ = 10;//The minimum the non hunger box can shrink to
     public boolean Start = false;
+    BukkitTask Timersystem = null;
 	@Override
     public void onEnable() {
     	this.getServer().getPluginManager().registerEvents(this, this);
@@ -66,11 +67,11 @@ public class HungerBox extends JavaPlugin implements Listener{
 				float Hungereffect = 1 * ((DiffX*DiffX)+(DiffZ * DiffZ));
 				player.removePotionEffect(PotionEffectType.HUNGER);
 				player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 9999, (int) Hungereffect));
-	    		getServer().broadcastMessage("Set" + String.valueOf(Hungereffect));
+	    		//getServer().broadcastMessage("Set" + String.valueOf(Hungereffect));
 	        }
 	    	else
 	    	{
-	    		getServer().broadcastMessage("Set 0");
+	    		//getServer().broadcastMessage("Set 0");
 				player.removePotionEffect(PotionEffectType.HUNGER);
 	    	}
     	}
@@ -116,7 +117,11 @@ public class HungerBox extends JavaPlugin implements Listener{
 		if (cmd.getName().equalsIgnoreCase("HungerStart")) 
 		{
 			Start = true;
-			BukkitTask task = new ScaleInside(this).runTaskTimer(this, 0, (long) DecayTicks);
+			if(Timersystem != null)
+			{
+				Timersystem.cancel();
+			}
+			Timersystem = new ScaleInside(this).runTaskTimer(this, 0, (long) DecayTicks);
 			return true;
 		}
     	return false;

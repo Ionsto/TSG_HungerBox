@@ -17,3 +17,13 @@ commands:
       usage: /<HungerEndSize> <X size> <Z size>
       permission: <TSG_Hunger>.HungerEndSize
       permission-message: You don't have <permission>
+   HungerDecay:
+      description: This sets the end game size
+      usage: /<HungerEndSize> <X size> <Z size>
+      permission: <TSG_Hunger>.HungerEndSize
+      permission-message: You don't have <permission>
+   HungerDelayTick:
+      description: This sets the end game size
+      usage: /<HungerEndSize> <X size> <Z size>
+      permission: <TSG_Hunger>.HungerEndSize
+      permission-message: You don't have <permission>
